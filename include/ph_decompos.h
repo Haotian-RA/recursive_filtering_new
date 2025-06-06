@@ -15,8 +15,7 @@ template<typename V,size_t N> class PartSolutionV{
 
     private:
 
-        T _b2, _b1, _a2, _a1;
-        V _h2, _h1;
+        T _a2, _a1;
 
     public:
 

@@ -44,7 +44,7 @@
 ############################################################################*/
 
 // number of repetitions of test. You may change this up to MAXREPEAT
-#define REPETITIONS  110    
+#define REPETITIONS  150 
 
 // Number of threads
 #define NUM_THREADS  1
@@ -77,11 +77,10 @@ extern "C" {
     int CounterTypesDesired[MAXCOUNTERS] = {
         1,      // core clock cycles (Intel Core 2 and later)
         9,      // instructions (not P4)
-        // 22,      // 
+ 
         100,    // micro-operations
         111,    // any resource stall
 
-        // 160,    
 
 
     //   160,    // uops port 0-7
@@ -95,12 +94,17 @@ extern "C" {
 
     //   150,    // uops port 0: ALU
     //   151,    // uops port 1: ALU
+    //   155,    // uops port 5: ALU
+
+        // 154,    // uops port 4: store
+
+
     //   152,    // uops port 2: load, vbroadcastss
     //   153,    // uops port 3: load, vbroadcastss
-    //   154,    // uops port 4: store
-    //   155,    // uops port 5: ALU
-    //   156,    // uops port 6: ALU, branch
     //   157,    //    uops port 7: store address
+
+
+    //   156,    // uops port 6: ALU, branch
     };
 }
 
@@ -172,16 +176,15 @@ constexpr static int L = V::size();
 // block size
 constexpr static int N = 8;
 
-// second order filter taps and initial states
-constexpr T b1 = 2, b2 = 1, a1 = 0.4, a2 = 0.25;
+// // second order filter taps and initial states
+constexpr T b1 = 2, b2 = 1, a1 = 1.3, a2 = -0.4; // LPF
 constexpr T xi1 = 2, xi2 = 1, yi1 = -3, yi2 = -5;
 
 // filter order
-constexpr static int M = 2;
+constexpr static int M = 1;
 // filter parameter
-constexpr T inits[M][4] = {{xi1,xi2,yi1,yi2},{xi1,xi2,yi1,yi2}};
-constexpr T coefs[M][5] = {{1,b1,b2,a1,a2},{1,b1,b2,a1,a2}};
-
+constexpr T inits[M][4] = {xi1,xi2,yi1,yi2};
+constexpr T coefs[M][5] = {1,b1,b2,a1,a2};
 
 // define data for multi-block filtering unit functions
 alignas(64) std::array<T,N*L> data{0};
@@ -210,7 +213,7 @@ int TestLoop (int thread) {
     }
 
     /*############################################################################
-    #
+    #   
     #        Initializations
     #
     ############################################################################*/
@@ -221,6 +224,7 @@ int TestLoop (int thread) {
 
     // initialize data for multi-block filtering unit functions
     data[0] = 1; // impulse response
+    // std::iota(data.begin(), data.end(), 0);
     for (auto n = 0; n < N; n++) M_in[n].load(&data[n*L]);
 
     FirCoreOrderTwo<V,N> F(b1,b2,xi1,xi2);
@@ -232,7 +236,6 @@ int TestLoop (int thread) {
     // initialize data for block filtering unit functions
     V_in.load(&data[0]);
     BlockFiltering<V> BF(b1,b2,a1,a2,xi1,xi2,yi1,yi2);
-
 
     // initialize data for filter function
     in[0] = 1; // impulse response
@@ -317,8 +320,7 @@ int TestLoop (int thread) {
 
         // call for unit function
         
-        V_out = BF(V_in);
-
+        auto r = _F(in.begin(),in.end(),out.begin());
 
         /*############################################################################
         #

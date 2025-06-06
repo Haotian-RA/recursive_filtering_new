@@ -248,7 +248,7 @@ fi
 
 # Compile B file and link
 echo "  Compiling and linking PMCTestB.cpp..."
-clang++ -std=c++20 -mavx2 -mfma -O3 a64.o -march=native -lpthread PMCTestB.cpp
+clang++ -std=c++20 -mavx2 -mfma -O2 -ffast-math a64.o -march=native -lpthread PMCTestB.cpp
 
 if [ $? -ne 0 ] ; then 
     echo "Error: Failed to compile PMCTestB.cpp"

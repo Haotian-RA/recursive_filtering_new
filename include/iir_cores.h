@@ -66,24 +66,24 @@ template<typename V,size_t N> class IirCoreOrderTwo{
             _HS.shift(inits[2]);
         };
 
-        // __attribute__((always_inline))
-        // inline T operator()(const T x){
+        __attribute__((always_inline))
+        inline T operator()(const T x){
 
-        //     T y = x + _b2*_PS[-2] + _b1*_PS[-1] + _a2*_HS[-2] + _a1*_HS[-1];
+            T y = x + _b2*_PS[-2] + _b1*_PS[-1] + _a2*_HS[-2] + _a1*_HS[-1];
 
-        //     _PS.shift(x);
-        //     _HS.shift(y);
+            _PS.shift(x);
+            _HS.shift(y);
 
-        //     return y;
-        // }
+            return y;
+        }
 
-        // __attribute__((always_inline))
-        // inline V operator()(const V x){
+        __attribute__((always_inline))
+        inline V operator()(const V x){
 
-        //     V y = _BF(x);
+            V y = _BF(x);
 
-        //     return y;
-        // }
+            return y;
+        }
 
         // __attribute__((always_inline))
         // inline std::array<V,N> operator()(const std::array<V,N>& x){
@@ -95,26 +95,26 @@ template<typename V,size_t N> class IirCoreOrderTwo{
         //     return y;
         // }
 
-        // __attribute__((always_inline))
-        // inline std::array<V,N> operator()(const std::array<V,N>& x){
-
-        //     auto v = _F(x);
-        //     auto y = _CR(v);
-
-        //     return y;
-        // }
-
         __attribute__((always_inline))
         inline std::array<V,N> operator()(const std::array<V,N>& x){
 
-            auto x_T = permuteV(x);
-            auto v = _F(x_T);
-            auto w = _PSV(v);
-            auto y_T = _HSV(w);
-            auto y = depermuteV(y_T);
+            auto v = _F(x);
+            auto y = _CR(v);
 
             return y;
         }
+
+        // __attribute__((always_inline))
+        // inline std::array<V,N> operator()(const std::array<V,N>& x){
+
+        //     auto x_T = permuteV(x);
+        //     auto v = _F(x_T);
+        //     auto w = _PSV(v);
+        //     auto y_T = _HSV(w);
+        //     auto y = depermuteV(y_T);
+
+        //     return y;
+        // }
 
         // __attribute__((always_inline))
         // inline std::array<V,N> operator()(const std::array<V,N>& x){

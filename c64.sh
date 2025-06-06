@@ -8,7 +8,7 @@ g++ -O2 -c -m64 -oa64.o PMCTestA.cpp
 fi
 
 # Compile B file and link
-clang++ -std=c++20 -mavx2 -mfma -O2 a64.o -march=native -lpthread PMCTestB.cpp
+clang++ -std=c++20 -mavx2 -mfma -O2 a64.o -march=native -ffast-math -lpthread PMCTestB.cpp
 if [ $? -ne 0 ] ; then exit ; fi
 taskset -c 0 ./a.out
 

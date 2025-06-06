@@ -6,7 +6,7 @@ import math
 import statistics
 from pathlib import Path
 
-def read_data_file(filename, skip_data_rows=10):
+def read_data_file(filename, skip_data_rows=50):
     """
     Read the data file and parse it into columns.
     Returns header and data as lists.

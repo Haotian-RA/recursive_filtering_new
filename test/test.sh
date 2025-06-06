@@ -16,5 +16,5 @@ fi
 
 BIN="/tmp/$(basename "${SRC%.cpp}")"
 
-clang++ -std=c++20 -mavx2 -mfma -march=native -lpthread -O3 "$SRC" -o "$BIN"
+clang++ -std=c++20 -mavx2 -mfma -march=native -lpthread -ffast-math -O2 "$SRC" -o "$BIN"
 exec "$BIN"

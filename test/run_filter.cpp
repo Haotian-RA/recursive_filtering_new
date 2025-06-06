@@ -102,13 +102,13 @@ double detect_cpu_frequency() {
 
 
 
-using V = Vec4f;
+using V = Vec8f;
 using T = decltype(std::declval<V>().extract(0));
 constexpr int L = V::size();
 constexpr static int N = 8;
 constexpr static int M = 8;
 
-constexpr T b1 = 2, b2 = 1, a1 = 0.4, a2 = 0.25;
+constexpr T b1 = 2, b2 = 1, a1 = 1.3, a2 = -0.4;
 constexpr T xi1 = 2, xi2 = 1, yi1 = -3, yi2 = -5;
 
 // constexpr T inits[M][4] = {xi1,xi2,yi1,yi2};
@@ -159,54 +159,26 @@ constexpr static int vector_size = 131072;
 constexpr int ITERS  = 10000;
 constexpr int WARMUP = 200;
 
-// TSC frequency (fill in your CPU's nominal Hz—you can check lscpu)
-// constexpr double TSC_HZ = 3.30e9;  
-
 
 // // PH measurement cps V8
-// constexpr T measured_cps[4][5] = {2.91,2.45,2.47,3.16,3.37,	
-//                                   4.83,4.14,4.08,5.16,5.58,
-//                                   8.90,7.38,7.18,9.18,10.09,
-//                                   16.78,13.75,13.53,16.75,20.36,
-//                                  }; // filter order: 2,4,8,16, block size: 8,16,32,64,128
+// constexpr T measured_cps[4][7] = {2.766,2.301,2.214,2.469,2.713,3.026,3.752,
+//                                   4.447,3.666,3.451,3.990,4.056,4.354,5.374,
+//                                   7.868,6.280,5.890,6.324,6.577,7.586,9.064,
+//                                   14.509,11.505,10.631,11.273,11.721,15.154,16.179
+//                                 }; // filter order: 2,4,8,16, block size: 8,16,32,64,128,256,512
 
-// // CR measurement cps V4
-// constexpr T measured_cps[4][5] = {3.25,2.47,2.25,2.63,3.01,	
-//                                   5.65,4.21,3.62,4.05,4.95,
-//                                   10.49,7.41,6.32,7.24,8.55,
-//                                   20.22,14.02,11.95,13.57,16.92,
+// // CR measurement cps V8
+// constexpr T measured_cps[4][7] = {3.156,2.324,2.007,2.101,2.252,2.501,2.916,
+//                                   5.320,3.657,3.011,3.088,3.270,3.468,4.389,
+//                                   9.535,6.407,5.044,5.067,5.158,5.426,8.611,
+//                                   18.128,11.833,9.065,9.079,10.224,13.587,16.157    
 //                                 }; // filter order: 2,4,8,16, block size: 8,16,32,64,128
 
+// // BF measurement cps V8
+// constexpr T measured_cps[4][1] = {1.785,5.580,17.802,49.280}; // filter order: 2,4,8,16, block size: 8,16,32,64,128
 
-
-
-
-// // PH measurement cps V4
-// constexpr T measured_cps[4][5] = {3.98,3.79,4.55,5.07,5.48,
-//                                   6.79,6.60,7.53,9.05,9.35,
-//                                   12.37,11.97,13.25,15.64,20.07,
-//                                   23.55,22.69,25.89,29.99,46.18
-//                                  }; // filter order: 2,4,8,16, block size: 8,16,32,64,128
-
-// // CR measurement cps V4
-// constexpr T measured_cps[4][5] = {3.57,3.18,3.63,3.93,4.51,
-//                                   6.34,5.42,5.87,7.14,7.68,
-//                                   11.62,9.67,10.32,12.22,14.03,
-//                                   22.15,18.38,19.88,22.92,34.80
-//                                 }; // filter order: 2,4,8,16, block size: 8,16,32,64,128
-
-
-// BF measurement cps V8
-// constexpr T measured_cps[4][1] = {1.81,6.47,18.95,52.82}; // filter order: 2,4,8,16, block size: 8,16,32,64,128
-
-// BF measurement cps V4
-// constexpr T measured_cps[4][1] = {2.91,6.35,18.65,52.29}; // filter order: 2,4,8,16, block size: 8,16,32,64,128
-
-// // scalar measurement cps V8
-// constexpr T measured_cps[4][1] = {12.73,23.57,44.06,87.80}; // filter order: 2,4,8,16, block size: 8,16,32,64,128
-
-// // scalar measurement cps V4
-constexpr T measured_cps[4][1] = {12.33,14.03,25.35,72.20}; // filter order: 2,4,8,16, block size: 8,16,32,64,128
+// scalar measurement cps V8
+constexpr T measured_cps[4][1] = {27.614,31.990,47.428,87.669}; // filter order: 2,4,8,16, block size: 8,16,32,64,128
 
 int main(){
 
